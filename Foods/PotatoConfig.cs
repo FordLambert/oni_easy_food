@@ -15,7 +15,7 @@ namespace EasyFood.Foods
         // Spoils in 8 cycles (longer than most foods)
         public const float SPOIL_TIME = 8f * 600f; // 600 seconds per cycle
 
-        public string[] GetDlcIds() => DlcManager.AVAILABLE_ALL_VERSIONS;
+        public string[] GetDlcIds() => null; // Compatible with all versions including Spaced Out!
 
         public GameObject CreatePrefab()
         {

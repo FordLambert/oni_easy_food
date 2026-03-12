@@ -28,7 +28,7 @@ namespace EasyFood.Plants
         public const float TEMP_MIN = 253.15f; // -20C
         public const float TEMP_MAX = 323.15f; // 50C
 
-        public string[] GetDlcIds() => DlcManager.AVAILABLE_ALL_VERSIONS;
+        public string[] GetDlcIds() => null; // Compatible with all versions including Spaced Out!
 
         public GameObject CreatePrefab()
         {
