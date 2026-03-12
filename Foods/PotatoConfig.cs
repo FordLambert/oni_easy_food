@@ -25,7 +25,7 @@ namespace EasyFood.Foods
                 desc: DESC,
                 mass: 1f,
                 unitMass: false,
-                anim: Assets.GetAnim("basic_plant_food_kanim"), // Using existing Mealwood fruit sprite
+                anim: Assets.GetAnim("meallicegrain_kanim"), // Using Meal Lice sprite
                 initialAnim: "object",
                 sceneLayer: Grid.SceneLayer.Front,
                 collisionShape: EntityTemplates.CollisionShape.RECTANGLE,

@@ -57,7 +57,9 @@ namespace EasyFood.Plants
                 pressure_lethal_low: 0f,
                 pressure_warning_low: 0.15f,
                 crop_id: Foods.PotatoConfig.ID,
-                max_radiation: 2500f
+                max_radiation: 2500f,
+                baseTraitId: ID + "Original",
+                baseTraitName: NAME
             );
 
             // Configure harvest amount (6 potatoes per harvest)

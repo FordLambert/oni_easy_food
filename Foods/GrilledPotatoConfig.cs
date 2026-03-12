@@ -25,7 +25,7 @@ namespace EasyFood.Foods
                 desc: DESC,
                 mass: 1f,
                 unitMass: false,
-                anim: Assets.GetAnim("cookedmeat_kanim"), // Using cooked meat sprite for now
+                anim: Assets.GetAnim("gristleberry_kanim"), // Using Gristle Berry sprite
                 initialAnim: "object",
                 sceneLayer: Grid.SceneLayer.Front,
                 collisionShape: EntityTemplates.CollisionShape.RECTANGLE,

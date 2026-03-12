@@ -2,5 +2,6 @@ title: "Easy Food - Potato"
 description: "Adds a Potato plant that is easy to grow and provides decent food."
 staticID: EasyFood.Potato
 version: 0.1.0
-minimumSupportedBuild: 526233
+minimumSupportedBuild: 707956
 APIVersion: 2
+supportedContent: ALL

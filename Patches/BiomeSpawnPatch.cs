@@ -1,5 +1,4 @@
 using HarmonyLib;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace EasyFood.Patches
@@ -7,56 +6,44 @@ namespace EasyFood.Patches
     /// <summary>
     /// Gives starting potato seeds when a new game begins.
     /// </summary>
-    [HarmonyPatch(typeof(CharacterContainer), "OnSpawn")]
+    [HarmonyPatch(typeof(Game), "OnSpawn")]
     public class StartingItemsPatch
     {
-        private static bool seedsGiven = false;
-
-        public static void Postfix(CharacterContainer __instance)
+        public static void Postfix()
         {
-            // Reset flag on new game
-            if (GameClock.Instance != null && GameClock.Instance.GetCycle() == 0 && !seedsGiven)
-            {
-                // Schedule seed delivery after game fully loads
-                GameScheduler.Instance.Schedule("GivePotatoSeeds", 1f, (_) => GiveStartingSeeds());
-                seedsGiven = true;
-            }
+            // Schedule seed delivery after game fully loads
+            GameScheduler.Instance.Schedule("GivePotatoSeeds", 5f, (_) => GiveStartingSeeds());
         }
 
         private static void GiveStartingSeeds()
         {
-            // Find the printing pod and spawn seeds near it
-            var pod = GameUtil.GetTelepad(ClusterManager.Instance.activeWorldId);
-            if (pod != null)
+            try
             {
-                Vector3 pos = pod.transform.position;
-                pos.x += 1f;
-
-                // Spawn 5 potato seeds to start
-                for (int i = 0; i < 5; i++)
+                // Find the printing pod and spawn seeds near it
+                var pod = GameUtil.GetTelepad(ClusterManager.Instance.activeWorldId);
+                if (pod != null)
                 {
-                    var seed = GameUtil.KInstantiate(
-                        Assets.GetPrefab(Plants.PotatoPlantConfig.SEED_ID),
-                        pos,
-                        Grid.SceneLayer.Ore
-                    );
-                    seed.SetActive(true);
+                    Vector3 pos = pod.transform.position;
+                    pos.x += 1f;
+
+                    var prefab = Assets.GetPrefab(Plants.PotatoPlantConfig.SEED_ID);
+                    if (prefab != null)
+                    {
+                        // Spawn 5 potato seeds to start
+                        for (int i = 0; i < 5; i++)
+                        {
+                            var seed = GameUtil.KInstantiate(prefab, pos, Grid.SceneLayer.Ore);
+                            seed.SetActive(true);
+                            pos.x += 0.5f;
+                        }
+                        Debug.Log("EasyFood: Gave 5 potato seeds at start!");
+                    }
                 }
-
-                Debug.Log("EasyFood: Gave 5 potato seeds at start!");
             }
-        }
-    }
-
-    /// <summary>
-    /// Resets the seeds given flag when returning to main menu.
-    /// </summary>
-    [HarmonyPatch(typeof(Game), "DestroyInstances")]
-    public class ResetSeedsFlag
-    {
-        public static void Postfix()
-        {
-            AccessTools.Field(typeof(StartingItemsPatch), "seedsGiven").SetValue(null, false);
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"EasyFood: Could not spawn starting seeds: {e.Message}");
+            }
         }
     }
 }
