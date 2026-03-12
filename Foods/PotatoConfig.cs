@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using STRINGS;
 using UnityEngine;
 
@@ -7,15 +8,15 @@ namespace EasyFood.Foods
     {
         public const string ID = "Potato";
         public const string NAME = "Potato";
-        public const string DESC = "A starchy tuber harvested from a Potato Plant. Can be eaten raw or cooked.";
+        public const string DESC = "A starchy tuber that can be eaten raw, cooked, or planted to grow more potatoes.";
 
         // 1200 kcal - between Meal Lice (600) and Bristle Berry (1600)
-        public const float CALORIES_PER_UNIT = 1200f * 1000f; // In joules
+        public const float CALORIES_PER_UNIT = 1200f * 1000f;
 
         // Spoils in 8 cycles (longer than most foods)
-        public const float SPOIL_TIME = 8f * 600f; // 600 seconds per cycle
+        public const float SPOIL_TIME = 8f * 600f;
 
-        public string[] GetDlcIds() => null; // Compatible with all versions including Spaced Out!
+        public string[] GetDlcIds() => null;
 
         public GameObject CreatePrefab()
         {
@@ -25,7 +26,7 @@ namespace EasyFood.Foods
                 desc: DESC,
                 mass: 1f,
                 unitMass: false,
-                anim: Assets.GetAnim("meallicegrain_kanim"), // Using Meal Lice sprite
+                anim: Assets.GetAnim("meallicegrain_kanim"),
                 initialAnim: "object",
                 sceneLayer: Grid.SceneLayer.Front,
                 collisionShape: EntityTemplates.CollisionShape.RECTANGLE,
@@ -34,19 +35,27 @@ namespace EasyFood.Foods
                 isPickupable: true
             );
 
-            // Constructor: (id, dlcId, caloriesPerUnit, quality, preserveTemp, rotTemp, spoilTime, canRot)
+            // Make it edible
             var foodInfo = new EdiblesManager.FoodInfo(
-                ID,                              // id
-                "",                              // dlcId
-                CALORIES_PER_UNIT,               // caloriesPerUnit
-                TUNING.FOOD.FOOD_QUALITY_MEDIOCRE, // quality
-                255.15f,                         // preserveTemperature (-18C)
-                277.15f,                         // rotTemperature (4C)
-                SPOIL_TIME,                      // spoilTime
-                true                             // can_rot
+                ID,
+                "",
+                CALORIES_PER_UNIT,
+                TUNING.FOOD.FOOD_QUALITY_MEDIOCRE,
+                255.15f,
+                277.15f,
+                SPOIL_TIME,
+                true
             );
 
-            return EntityTemplates.ExtendEntityToFood(prefab, foodInfo);
+            EntityTemplates.ExtendEntityToFood(prefab, foodInfo);
+
+            // Make it plantable (like a seed)
+            prefab.AddOrGet<KPrefabID>().AddTag(GameTags.CropSeed, false);
+            var plantableSeed = prefab.AddOrGet<PlantableSeed>();
+            plantableSeed.PlantID = new Tag(Plants.PotatoPlantConfig.ID);
+            plantableSeed.domesticatedDescription = "Plant a Potato to grow 6 more.";
+
+            return prefab;
         }
 
         public void OnPrefabInit(GameObject inst) { }

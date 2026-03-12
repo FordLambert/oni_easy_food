@@ -26,7 +26,7 @@ namespace EasyFood.Patches
                     Vector3 pos = pod.transform.position;
                     pos.x += 1f;
 
-                    var prefab = Assets.GetPrefab(Plants.PotatoPlantConfig.SEED_ID);
+                    var prefab = Assets.GetPrefab(Foods.PotatoConfig.ID);
                     if (prefab != null)
                     {
                         // Spawn 5 potato seeds to start
@@ -36,7 +36,7 @@ namespace EasyFood.Patches
                             seed.SetActive(true);
                             pos.x += 0.5f;
                         }
-                        Debug.Log("EasyFood: Gave 5 potato seeds at start!");
+                        Debug.Log("EasyFood: Gave 5 potatoes at start!");
                     }
                 }
             }

@@ -24,9 +24,9 @@ A mod for Oxygen Not Included that adds an easy-to-grow Potato plant and a cooke
 - **Shelf life:** 12 cycles
 - **Recipe:** 1 Potato → 1 Grilled Potato (Cooking Station, 30s)
 
-### Obtaining Seeds
-- 5 Potato Seeds are given at the start of each new game
-- Additional seeds available through Care Packages (Printing Pod)
+### Obtaining Potatoes
+- 5 Potatoes are given at the start of each new game
+- Plant a Potato to grow 6 more (no separate seeds needed!)
 
 ## Installation
 
@@ -41,7 +41,7 @@ A mod for Oxygen Not Included that adds an easy-to-grow Potato plant and a cooke
 ```
 EasyFood/
 ├── EasyFood.dll
-└── mod.yaml
+└── mod_info.yaml
 ```
 
 ## Building from Source
@@ -63,7 +63,7 @@ EasyFood/
 
 ## Compatibility
 
-- **Game version:** U52-626573 and above
+- **Game version:** U57-707956 and above
 - **DLC:** Compatible with base game and Spaced Out!
 
 ## Changelog
@@ -79,6 +79,11 @@ EasyFood/
 
 MIT License
 
+## Custom Sprites
+
+Custom sprite images are available in `images/potatoes/`. To convert them to Kanim format, see the guide: [docs/GUIDE_SPRITES_WINDOWS.md](docs/GUIDE_SPRITES_WINDOWS.md)
+
 ## Credits
 
-- Sprites: Currently using placeholder sprites from base game (Mealwood)
+- Sprites: Currently using placeholder sprites from base game
+- Custom sprite PNGs included for future use
