@@ -15,7 +15,7 @@ namespace EasyFood.Foods
         // Spoils in 12 cycles (longer than raw)
         public const float SPOIL_TIME = 12f * 600f;
 
-        public string[] GetDlcIds() => null; // Compatible with all versions including Spaced Out!
+        public string[] GetDlcIds() => DlcManager.AVAILABLE_ALL_VERSIONS;
 
         public GameObject CreatePrefab()
         {
@@ -25,7 +25,7 @@ namespace EasyFood.Foods
                 desc: DESC,
                 mass: 1f,
                 unitMass: false,
-                anim: Assets.GetAnim("gristleberry_kanim"), // Using Gristle Berry sprite
+                anim: Assets.GetAnim("cookedegg_kanim"),
                 initialAnim: "object",
                 sceneLayer: Grid.SceneLayer.Front,
                 collisionShape: EntityTemplates.CollisionShape.RECTANGLE,

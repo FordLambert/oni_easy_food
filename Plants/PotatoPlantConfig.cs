@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Klei.AI;
 using STRINGS;
 using UnityEngine;
 
@@ -9,12 +10,18 @@ namespace EasyFood.Plants
         public const string ID = "PotatoPlant";
         public const string NAME = "Potato Plant";
         public const string DESC = "A hardy plant that produces nutritious Potatoes. Grows well in most conditions.";
-        public const string DOMESTICATED_DESC = "A domesticated Potato Plant. Plant a Potato to grow 6 more.";
+        public const string DOMESTICATED_DESC = "A domesticated Potato Plant.";
 
-        // Growth time: 4 cycles
+        public const string SEED_ID = "PotatoSeed";
+        public const string SEED_NAME = "Potato Seed";
+        public const string SEED_DESC = "The seed of a Potato Plant.";
+
+        private const string TRAIT_ID = "PotatoPlantOriginal";
+
+        // Growth time: 4 cycles (in seconds)
         public const float GROWTH_TIME = 4f * 600f;
 
-        // Harvest amount: plant 1 potato, get 6 back
+        // Harvest amount: 6 potatoes
         public const int CROP_AMOUNT = 6;
 
         // Water requirement (kg per cycle)
@@ -24,7 +31,7 @@ namespace EasyFood.Plants
         public const float TEMP_MIN = 253.15f; // -20C
         public const float TEMP_MAX = 323.15f; // 50C
 
-        public string[] GetDlcIds() => null;
+        public string[] GetDlcIds() => DlcManager.AVAILABLE_ALL_VERSIONS;
 
         public GameObject CreatePrefab()
         {
@@ -32,12 +39,12 @@ namespace EasyFood.Plants
                 id: ID,
                 name: UI.FormatAsLink(NAME, ID),
                 desc: DESC,
-                mass: 1f,
-                anim: Assets.GetAnim("meallice_kanim"),
-                initialAnim: "idle_empty",
-                sceneLayer: Grid.SceneLayer.BuildingFront,
                 width: 1,
                 height: 2,
+                mass: 1f,
+                anim: Assets.GetAnim("oxy_fern_kanim"),
+                initialAnim: "idle_empty",
+                sceneLayer: Grid.SceneLayer.BuildingFront,
                 decor: TUNING.DECOR.BONUS.TIER1,
                 defaultTemperature: 293.15f
             );
@@ -48,33 +55,50 @@ namespace EasyFood.Plants
                 temperature_warning_low: TEMP_MIN,
                 temperature_warning_high: TEMP_MAX,
                 temperature_lethal_high: TEMP_MAX + 10f,
-                safe_elements: new SimHashes[] { SimHashes.Oxygen, SimHashes.CarbonDioxide },
-                pressure_sensitive: true,
-                pressure_lethal_low: 0f,
-                pressure_warning_low: 0.15f,
+                pressure_sensitive: false,
                 crop_id: Foods.PotatoConfig.ID,
                 max_radiation: 2500f,
-                baseTraitId: ID + "Original",
+                baseTraitId: TRAIT_ID,
                 baseTraitName: NAME
             );
 
-            // Configure harvest: 6 potatoes per harvest
-            var crop = prefab.AddOrGet<Crop>();
-            crop.cropVal = new Crop.CropVal(Foods.PotatoConfig.ID, GROWTH_TIME, CROP_AMOUNT, true);
-
-            // Add water requirement
-            EntityTemplates.ExtendPlantToIrrigated(
-                template: prefab,
-                info: new PlantElementAbsorber.ConsumeInfo
-                {
-                    tag = SimHashes.Water.CreateTag(),
-                    massConsumptionRate = WATER_RATE / 600f
-                }
-            );
+            // Add maturity modifier to the trait (growth time in cycles)
+            var trait = Db.Get().traits.TryGet(TRAIT_ID);
+            if (trait != null)
+            {
+                trait.Add(new AttributeModifier(Db.Get().Amounts.Maturity.maxAttribute.Id, GROWTH_TIME / 600f, NAME));
+            }
 
             prefab.AddOrGet<StandardCropPlant>();
 
-            // No separate seed - the Potato itself is plantable (configured in PotatoConfig)
+            // Explicitly configure crop
+            var crop = prefab.AddOrGet<Crop>();
+            crop.cropVal = new Crop.CropVal(Foods.PotatoConfig.ID, GROWTH_TIME, CROP_AMOUNT, true);
+
+            // Create seed for the plant (2 seeds per harvest)
+            var seed = EntityTemplates.CreateAndRegisterSeedForPlant(
+                plant: prefab,
+                id: SEED_ID,
+                name: UI.FormatAsLink(SEED_NAME, ID),
+                desc: SEED_DESC,
+                productionType: SeedProducer.ProductionType.Harvest,
+                anim: Assets.GetAnim("muckroot_kanim"),
+                numberOfSeeds: 2,
+                additionalTags: new List<Tag> { GameTags.CropSeed },
+                sortOrder: 3,
+                width: 0.33f,
+                height: 0.33f
+            );
+
+            // Create preview for farm plot
+            EntityTemplates.CreateAndRegisterPreviewForPlant(
+                seed: seed,
+                id: ID + "_preview",
+                anim: Assets.GetAnim("oxy_fern_kanim"),
+                initialAnim: "place",
+                width: 1,
+                height: 2
+            );
 
             return prefab;
         }

@@ -3,11 +3,10 @@ using HarmonyLib;
 namespace EasyFood.Patches
 {
     /// <summary>
-    /// Placeholder for future world generation patches.
-    /// Care packages patch disabled due to API changes.
+    /// Placeholder for care packages - API has changed, needs investigation.
     /// </summary>
-    public class WorldGenPatch
+    public class CarePackagesPatch
     {
-        // TODO: Re-implement care packages with updated API
+        // TODO: Implement care packages with new API (carePackagesByDlc)
     }
 }

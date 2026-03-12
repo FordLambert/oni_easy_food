@@ -16,7 +16,7 @@ namespace EasyFood.Foods
         // Spoils in 8 cycles (longer than most foods)
         public const float SPOIL_TIME = 8f * 600f;
 
-        public string[] GetDlcIds() => null;
+        public string[] GetDlcIds() => DlcManager.AVAILABLE_ALL_VERSIONS;
 
         public GameObject CreatePrefab()
         {
@@ -26,7 +26,7 @@ namespace EasyFood.Foods
                 desc: DESC,
                 mass: 1f,
                 unitMass: false,
-                anim: Assets.GetAnim("meallicegrain_kanim"),
+                anim: Assets.GetAnim("muckroot_kanim"),
                 initialAnim: "object",
                 sceneLayer: Grid.SceneLayer.Front,
                 collisionShape: EntityTemplates.CollisionShape.RECTANGLE,
@@ -48,12 +48,6 @@ namespace EasyFood.Foods
             );
 
             EntityTemplates.ExtendEntityToFood(prefab, foodInfo);
-
-            // Make it plantable (like a seed)
-            prefab.AddOrGet<KPrefabID>().AddTag(GameTags.CropSeed, false);
-            var plantableSeed = prefab.AddOrGet<PlantableSeed>();
-            plantableSeed.PlantID = new Tag(Plants.PotatoPlantConfig.ID);
-            plantableSeed.domesticatedDescription = "Plant a Potato to grow 6 more.";
 
             return prefab;
         }

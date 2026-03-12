@@ -19,30 +19,44 @@ namespace EasyFood.Patches
         {
             try
             {
-                // Find the printing pod and spawn seeds near it
+                // Find the printing pod and spawn items near it
                 var pod = GameUtil.GetTelepad(ClusterManager.Instance.activeWorldId);
                 if (pod != null)
                 {
                     Vector3 pos = pod.transform.position;
                     pos.x += 1f;
 
-                    var prefab = Assets.GetPrefab(Foods.PotatoConfig.ID);
-                    if (prefab != null)
+                    // Spawn 5 potatoes (food)
+                    var potatoPrefab = Assets.GetPrefab(Foods.PotatoConfig.ID);
+                    if (potatoPrefab != null)
                     {
-                        // Spawn 5 potato seeds to start
                         for (int i = 0; i < 5; i++)
                         {
-                            var seed = GameUtil.KInstantiate(prefab, pos, Grid.SceneLayer.Ore);
-                            seed.SetActive(true);
-                            pos.x += 0.5f;
+                            var potato = GameUtil.KInstantiate(potatoPrefab, pos, Grid.SceneLayer.Ore);
+                            potato.SetActive(true);
+                            pos.x += 0.3f;
                         }
-                        Debug.Log("EasyFood: Gave 5 potatoes at start!");
                     }
+
+                    // Spawn 3 potato seeds
+                    pos.x += 0.5f;
+                    var seedPrefab = Assets.GetPrefab(Plants.PotatoPlantConfig.SEED_ID);
+                    if (seedPrefab != null)
+                    {
+                        for (int i = 0; i < 3; i++)
+                        {
+                            var seed = GameUtil.KInstantiate(seedPrefab, pos, Grid.SceneLayer.Ore);
+                            seed.SetActive(true);
+                            pos.x += 0.3f;
+                        }
+                    }
+
+                    Debug.Log("EasyFood: Gave 5 potatoes and 3 seeds at start!");
                 }
             }
             catch (System.Exception e)
             {
-                Debug.LogWarning($"EasyFood: Could not spawn starting seeds: {e.Message}");
+                Debug.LogWarning($"EasyFood: Could not spawn starting items: {e.Message}");
             }
         }
     }
